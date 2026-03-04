@@ -56,6 +56,20 @@ app.withTypeProvider<ZodTypeProvider>().route({
     };
   },
 });
+app.withTypeProvider<ZodTypeProvider>().route({
+  method: "GET",
+  url: "/home",
+  schema: {
+    description: "Home",
+    tags: ["Home"],
+    response: {
+      200: z.string({}),
+    },
+  },
+  handler: () => {
+    return "Home";
+  },
+});
 
 try {
   await app.listen({ port: Number(process.env.PORT) || 3000 });
