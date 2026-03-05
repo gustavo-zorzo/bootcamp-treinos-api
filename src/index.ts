@@ -116,7 +116,15 @@ app.route({
       // Forward response to client
       reply.status(response.status);
       response.headers.forEach((value, key) => reply.header(key, value));
-      reply.send(response.body ? await response.text() : null);
+
+      const contentType = response.headers.get("content-type") ?? "";
+      if (contentType.includes("application/json")) {
+        const data = await response.json();
+        reply.send(data);
+      } else {
+        const text = await response.text();
+        reply.send(text || null);
+      }
     } catch (error) {
       app.log.error(error);
       reply.status(500).send({
